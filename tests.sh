@@ -1,6 +1,6 @@
 check() {
   git checkout $1
-  sh test.sh
+  sh `dirname $0`/test.sh
 }
 
 for i in `git branch | cut -c3- | grep -v master`; do
