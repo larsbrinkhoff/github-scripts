@@ -11,7 +11,7 @@ rebase_one() {
   case "$output" in
     *Merge*conflict*in*lib/linguist/samples.json*)
       echo FIX
-      sh fix.sh
+      # Fix it.
       git rebase --continue
       ;;
     *)
