@@ -1,4 +1,4 @@
-QUERY="extension:scr+dup"
+QUERY="extension:scr+dup+swap"
 > TMP
 
 fetch() {
@@ -7,7 +7,7 @@ fetch() {
     echo -n "$i " 1>&2
     URL="https://github.com/search?p=$i&q=$QUERY&type=Code"
     curl "$URL" > tmp.html 2> /dev/null
-    awk -F'"' '/\/blob\// && !/#/ {print $2}' < tmp.html | cut -d/ -f1-3 >> TMP
+    awk -F'"' '/\/blob\// && !/#/ {print $2}' < tmp.html >> TMP
     grep 'next_page' tmp.html > /dev/null || return
     grep 'next_page disabled' tmp.html > /dev/null && return
     i=$[$i + 1]
@@ -18,7 +18,9 @@ fetch() {
 fetch; echo
 
 cat TMP | while read i; do
-  echo "https://github.com$i"
-done | sort -u > query.csv
+  file=samples/`echo $i | cut -d/ -f1-3,6-`
+  mkdir -p $(dirname $file)
+  curl "https://github.com$i" 2> /dev/null > $file
+done
 
 rm -f TMP tmp.html
