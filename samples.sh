@@ -20,7 +20,8 @@ fetch; echo
 cat TMP | while read i; do
   file=samples/`echo $i | cut -d/ -f1-3,6-`
   mkdir -p $(dirname $file)
-  curl "https://github.com$i" 2> /dev/null > $file
+  url="https://raw.githubusercontent.com`echo $i | sed 's/\/blob\//\//'`"
+  curl "$url" 2> /dev/null > $file
 done
 
 rm -f TMP tmp.html
