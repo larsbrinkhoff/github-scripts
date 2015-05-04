@@ -1,4 +1,6 @@
-QUERY="extension:scr+dup+swap"
+#!/bin/bash
+
+QUERY="extension:n+NOT+slartibartfast"
 > TMP
 
 fetch() {

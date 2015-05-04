@@ -1,4 +1,6 @@
-QUERY="extension:scr+dup"
+#!/bin/bash
+
+QUERY="extension:for+acceptable+primers"
 > TMP
 
 fetch() {

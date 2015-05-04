@@ -1,3 +1,5 @@
+#!/bin/sh
+
 check() {
   git checkout $1
   sh `dirname $0`/test.sh
