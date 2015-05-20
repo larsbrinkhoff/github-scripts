@@ -1,3 +1,6 @@
 *~
 *.csv
 samples
+*.actual
+*.after
+*.before
