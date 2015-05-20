@@ -13,7 +13,7 @@ fetch() {
     grep 'next_page' tmp.html > /dev/null || return
     grep 'next_page disabled' tmp.html > /dev/null && return
     i=$[$i + 1]
-    sleep 10
+    sleep 7
   done
 }
 
