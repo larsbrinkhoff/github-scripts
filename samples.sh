@@ -19,19 +19,19 @@ tmp_txt="$folder.txt"
 progress_bar() {
   i=$1
   total=$2
-  nb=$[$i * 50 / $total]
+  nb_equals=$[$i * 50 / $total]
   echo -n '['
-  for ((j=0;j<nb;j++)); do
+  j=0
+  for ((;j<nb_equals;j++)); do
     echo -n '='
   done
   echo -n '>'
-  nb=$[49 - $nb]
-  for ((j=0;j<nb;j++)); do
+  for ((;j<50;j++)); do
     echo -n " "
   done
   echo -n '] '
   pourcentage=$[$i * 100 / $total]
-  echo -ne "$pourcentage%\r"
+  echo -ne "$pourcentage% ($i)\r"
 }
 
 fetch() {
