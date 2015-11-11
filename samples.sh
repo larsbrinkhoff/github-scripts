@@ -17,9 +17,9 @@ tmp_txt="$folder.txt"
 > $tmp_html
 
 progress_bar() {
-  i=$1
+  progress=$1
   total=$2
-  nb_equals=$[$i * 50 / $total]
+  nb_equals=$[$progress * 50 / $total]
   echo -n '['
   j=0
   for ((;j<nb_equals;j++)); do
@@ -30,24 +30,29 @@ progress_bar() {
     echo -n " "
   done
   echo -n '] '
-  pourcentage=$[$i * 100 / $total]
-  echo -ne "$pourcentage% ($i)\r"
+  pourcentage=$[$progress * 100 / $total]
+  echo -ne "$pourcentage% ($progress)\r"
+}
+
+fetch_page() {
+  page=$1
+  URL="https://github.com/search?${option}p=$page&q=$query&type=Code"
+  curl "$URL" > $tmp_html 2> /dev/null
+  awk -F'"' '/\/blob\// && !/#/ {print $2}' < $tmp_html >> $tmp_txt
+  grep 'next_page' $tmp_html > /dev/null || stop="1"
+  grep 'next_page disabled' $tmp_html > /dev/null && stop="1"
 }
 
 fetch() {
-  URL="https://github.com/search?${option}p=1&q=$query&type=Code"
-  curl "$URL" > $tmp_html 2> /dev/null
+  stop="0"
+  fetch_page 1
   total=`grep -oP '(?<=>)[0-9]+(?=</a>\s*<a class="next_page")' $tmp_html`
-  i=1
-  while :; do
+  i=2
+  while [ $stop -eq 0 ] ; do
     progress_bar $i $total
-    URL="https://github.com/search?${option}p=$i&q=$query&type=Code"
-    curl "$URL" > $tmp_html 2> /dev/null
-    awk -F'"' '/\/blob\// && !/#/ {print $2}' < $tmp_html >> $tmp_txt
-    grep 'next_page' $tmp_html > /dev/null || return
-    grep 'next_page disabled' $tmp_html > /dev/null && return
-    i=$[$i + 1]
     sleep 10
+    fetch_page $i
+    i=$[$i + 1]
   done
 }
 
