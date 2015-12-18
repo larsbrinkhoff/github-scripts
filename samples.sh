@@ -37,7 +37,7 @@ progress_bar() {
 fetch_page() {
   page=$1
   URL="https://github.com/search?${option}p=$page&q=$query&type=Code"
-  curl "$URL" > $tmp_html 2> /dev/null
+  wget -O $tmp_html "$URL" 2> /dev/null
   awk -F'"' '/\/blob\// && !/#/ {print $2}' < $tmp_html >> $tmp_txt
   grep 'next_page' $tmp_html > /dev/null || stop="1"
   grep 'next_page disabled' $tmp_html > /dev/null && stop="1"
