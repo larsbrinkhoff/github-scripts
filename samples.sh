@@ -2,11 +2,12 @@
 
 folder=$2
 query=${1// /+}
+session_id=$3
 option=""
-if [ "$#" -eq 3 ]; then
-  if [ "$3" == "new" ]; then
+if [ "$#" -eq 4 ]; then
+  if [ "$4" == "new" ]; then
     option="s=indexed&o=desc&"
-  elif [ "$3" == "old" ]; then
+  elif [ "$4" == "old" ]; then
     option="s=indexed&o=asc&"
   fi
 fi
@@ -37,7 +38,7 @@ progress_bar() {
 fetch_page() {
   page=$1
   URL="https://github.com/search?${option}p=$page&q=$query&type=Code"
-  wget -O $tmp_html "$URL" 2> /dev/null
+  wget --header "Cookie: user_session=${session_id}" -O $tmp_html "$URL" 2> /dev/null
   awk -F'"' '/\/blob\// && !/#/ {print $2}' < $tmp_html >> $tmp_txt
   grep 'next_page' $tmp_html > /dev/null || stop="1"
   grep 'next_page disabled' $tmp_html > /dev/null && stop="1"
